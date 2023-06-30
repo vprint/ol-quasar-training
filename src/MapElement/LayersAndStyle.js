@@ -70,11 +70,14 @@ class LayersAndStyle {
 
     map.addLayer(this.features);
     //map.addLayer(this.selectionLayer);
-    //map.addLayer(this.editionLayer);
+    map.addLayer(this.editionLayer);
     map.addLayer(this.osmLayer);
     map.addLayer(this.JawgMapsStreets);
   }
 
+  /**
+   * Fonction de requêtage des styles
+   */
   async initializeStyle() {
     // Reqête du style
     let JSONStyle = await ApiRequestor.getStyles();
@@ -96,6 +99,10 @@ class LayersAndStyle {
     }
   }
 
+  /**
+   * Fonction d'application des styles aux features
+   * @param {Objet} feature - entité à styliser.
+   */
   cartoFunction(feature) {
     // Application des styles en fonction d'id_typology
     if (

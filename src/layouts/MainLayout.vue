@@ -1,53 +1,47 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-
     <q-page-container>
       <div id="map" class="map-container"></div>
     </q-page-container>
-
-    <button-toolbar />
-
+    <widget-toolbar />
+    <layers-tool />
   </q-layout>
 </template>
 
-<script>
+<script setup>
 import { Map, View } from 'ol';
 import Link from 'ol/interaction/Link'
 import { MAP_SETTINGS } from '../miscellaneous/enum';
 import { fromLonLat } from 'ol/proj';
-import ButtonToolbar from 'components/ButtonToolbar.vue';
+import WidgetToolbar from '../components/widgets/toolbar/WidgetToolbar.vue';
 import LayersAndStyle from '../MapElement/LayersAndStyle';
+import LayersTool from '../components/widgets/LayersTool.vue'
+import { useMapStore } from '../stores/map-store';
+import { ref, onMounted } from 'vue'
 
-export default {
+const mapStore = useMapStore();
+const map = ref(null)
 
-  components: {
-    ButtonToolbar
-  },
-
-  name: 'MainLayout',
-
-  mounted() {
-    this.map = new Map({
-      target: 'map',
-      controls: [],
-      view: new View({
-        center: fromLonLat(MAP_SETTINGS.CENTER),
-        zoom: MAP_SETTINGS.ZOOM
-      }),
-    })
-    this.map.addInteraction(new Link({
-      params: ['x', 'y', 'z', 'r']
-    }))
-
-    new LayersAndStyle({
-      map: this.map
-    })
-
-  },
-};
+onMounted(() => {
+  map.value = new Map({
+    target: 'map',
+    controls: [],
+    view: new View({
+      center: fromLonLat(MAP_SETTINGS.CENTER),
+      zoom: MAP_SETTINGS.ZOOM
+    }),
+  })
+  map.value.addInteraction(new Link({
+    params: ['x', 'y', 'z', 'r']
+  }))
+  new LayersAndStyle({
+    map: map.value
+  })
+  mapStore.defineMap(map.value)
+})
 </script>
 
-<style>
+<style scoped>
 @import "ol/ol.css";
 
 #map {
