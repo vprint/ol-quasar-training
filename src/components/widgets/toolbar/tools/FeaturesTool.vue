@@ -28,7 +28,7 @@
         :disable="actionType === 'create'" class="merriweather">
         <div class="merriweather">Cliquer sur une entité de la carte afin de la sélectionner.</div>
         <q-stepper-navigation>
-          <feature-selector />
+          <feature-selector @selector-next="enableModification" />
           <!-- <q-table v-if="features.length > 1" square flat bordered square title="Entités" :rows="features" :columns="columns"
             row-key="id_" selection="single" v-model:selected="selected">
             <template v-slot:bottom>
@@ -57,38 +57,18 @@
 </template>
 
 <script setup >
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 import FeatureSelector from '../../selector/FeatureSelector.vue'
-import Selector from '../../selector/Selector'
 import RegularWidget from '../../../RegularWidget.vue';
 import ApiRequestor from 'src/Services/ApiRequestor';
 
 const actionType = ref(null);
 const step = ref(1);
-const selector = ref(new Selector())
-const features = ref(selector.value.features)
 const selected = ref([])
 const typology = ref({})
 const types = ref([])
 formatTypology()
 const model = ref(null)
-
-const columns = [
-  {
-    name: 'FeatureType',
-    required: true,
-    label: 'Type',
-    align: 'left',
-    field: row => row.properties_.id_typology,
-    format: val => typology.value[val]
-  },
-  {
-    name: 'id_',
-    label: 'ID',
-    align: 'left',
-    field: 'id_',
-  }
-]
 
 /**
  * Fonction de requêtage des typologies
@@ -102,22 +82,12 @@ async function formatTypology() {
   }
 }
 
-// Ecouteur de changement de features sélectionnée
-watch(() => selector.value.features, (newFeatures) => {
-  features.value = newFeatures;
-  if (features.value.length == 1) {
-    step.value = 4
-  }
-});
-
-
 /**
  * Fonction de gestion de l'étape de sélection
  */
 function enableSelectionState() {
   actionType.value = 'select'
   step.value = 3
-  selector.value.enableSelection(true)
 }
 
 /**
@@ -125,16 +95,14 @@ function enableSelectionState() {
  */
 function disableSelectionState() {
   step.value = 1
-  selector.value.enableSelection(false)
 }
 
 /**
  * Fonction d'activation de l'étape de modification
  */
-function enableModification() {
+function enableModification(feature) {
   step.value = 4
-  model.value = typology.value[selected.value[0].properties_.id_typology]
-  selector.value.enableSelection(false)
+  model.value = typology.value[feature[0].properties_.id_typology]
 }
 
 /**
@@ -142,7 +110,6 @@ function enableModification() {
  */
 function disableModification() {
   step.value = actionType.value === 'select' ? 3 : 2
-  selector.value.enableSelection(true)
 }
 
 </script>
