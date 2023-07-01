@@ -28,7 +28,7 @@
         :disable="actionType === 'create'" class="merriweather">
         <div class="merriweather">Cliquer sur une entité de la carte afin de la sélectionner.</div>
         <q-stepper-navigation>
-          <feature-selector @selector-next="enableModification" />
+          <feature-selector @selector-next="enableModification" @selector-back="disableSelectionState" />
           <!-- <q-table v-if="features.length > 1" square flat bordered square title="Entités" :rows="features" :columns="columns"
             row-key="id_" selection="single" v-model:selected="selected">
             <template v-slot:bottom>

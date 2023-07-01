@@ -4,7 +4,7 @@
     <template v-slot:bottom>
       <q-space />
       <q-btn flat square @click="$emit('selectorBack')" color="primary" label="Retour" class="q-ml-sm" />
-      <q-btn square @click="$emit('selectorNext', selected)" :disable="selected.length < 1" color="primary" icon="done"
+      <q-btn square @click="highLightFeatures" :disable="selected.length < 1" color="primary" icon="done"
         label="Continuer" class="merriweather" />
     </template>
   </q-table>
@@ -64,6 +64,10 @@ function enableSelection() {
   }
   mapStore.map.on("click", featuresSelector);
 };
+
+function highLightFeatures() {
+  console.log(mapStore.selectionLayer)
+}
 </script>
 
 <style lang="scss" scoped></style>

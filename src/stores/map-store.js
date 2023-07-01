@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { LAYERS_SETTINGS } from "src/miscellaneous/enum";
 
 export const useMapStore = defineStore("map", {
   state: () => ({
@@ -12,6 +13,9 @@ export const useMapStore = defineStore("map", {
     mainMap() {
       return this.map;
     },
+    selectionLayer() {
+      return this.map.getLayers().getArray().find(layer => layer.get('name') == LAYERS_SETTINGS.SELECTION_LAYER.NAME)
+    }
   },
   actions: {
     defineMap(map) {

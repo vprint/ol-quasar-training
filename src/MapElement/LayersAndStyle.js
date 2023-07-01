@@ -69,7 +69,7 @@ class LayersAndStyle {
     });
 
     map.addLayer(this.features);
-    //map.addLayer(this.selectionLayer);
+    map.addLayer(this.selectionLayer);
     map.addLayer(this.editionLayer);
     map.addLayer(this.osmLayer);
     map.addLayer(this.JawgMapsStreets);
