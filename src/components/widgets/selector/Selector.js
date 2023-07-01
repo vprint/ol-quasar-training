@@ -1,3 +1,5 @@
+//TODO: SUPPRIMMER CE FICHIER QUI N'EST PLUS UTILE A TERME.
+
 import { useMapStore } from "src/stores/map-store";
 
 class Selector {
