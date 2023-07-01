@@ -41,7 +41,7 @@ onMounted(() => {
 })
 </script>
 
-<style scoped>
+<style>
 @import "ol/ol.css";
 
 #map {
