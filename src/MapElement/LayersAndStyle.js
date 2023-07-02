@@ -13,10 +13,12 @@ import {
   FEATURES_SETTINGS,
 } from "../miscellaneous/enum";
 import { Fill, Stroke, Style } from "ol/style";
+import { useMapStore } from "src/stores/map-store";
 
 class LayersAndStyle {
   constructor({ map }) {
     this.StyleCache = {};
+    this.mapStore = useMapStore();
     this.initializeStyle();
 
     // Cartographie thématique
@@ -40,6 +42,7 @@ class LayersAndStyle {
       source: this.features.getSource(),
       name: LAYERS_SETTINGS.SELECTION_LAYER.NAME,
       zIndex: LAYERS_SETTINGS.SELECTION_LAYER.ZINDEX,
+      style: this.selectionCartoFunction.bind(this),
     });
 
     // Layer d'édition
@@ -115,6 +118,16 @@ class LayersAndStyle {
     // Si le style n'est pas disponible alors le DEFAULT_STYLE est retourné
     else {
       return STYLE_SETTINGS.DEFAULT_STYLE;
+    }
+  }
+
+  /**
+   * Fonction d'application du style de sélection
+   * @param {Objet} feature - entité à styliser.
+   */
+  selectionCartoFunction(feature) {
+    if (this.mapStore.selectedFeaturesId.includes(feature.getId())) {
+      return LAYERS_SETTINGS.SELECTION_LAYER.STYLE;
     }
   }
 }

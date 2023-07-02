@@ -14,6 +14,7 @@
 import { useMapStore } from "src/stores/map-store";
 import { ref } from 'vue';
 import ApiRequestor from "src/Services/ApiRequestor";
+import { LAYERS_SETTINGS } from "src/miscellaneous/enum";
 
 const features = ref([])
 const mapStore = useMapStore();
@@ -60,7 +61,13 @@ function enableSelection() {
   featuresSelector = (e) => {
     features.value = mapStore.map.getFeaturesAtPixel(e.pixel, {
       hitTolerance: 5,
+      layerFilter: function (layer) {
+        return layer.get('name') === LAYERS_SETTINGS.VECTOR_TILES.NAME;
+      }
     });
+    mapStore.setSelectedFeatures(features.value)
+    // TODO: Inverstiguer sur la possibilité de faire un addFeatures dans la couche, ce qui serait finalement plus simple
+    mapStore.selectionLayer.changed()
   }
   mapStore.map.on("click", featuresSelector);
 };

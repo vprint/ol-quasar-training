@@ -46,10 +46,10 @@ export const LAYERS_SETTINGS = {
     STYLE: new Style({
       stroke: new Stroke({
         color: "rgba(220,50,225,1)",
-        width: 2,
+        width: 4,
       }),
       fill: new Fill({
-        color: "rgba(220,50,225,0.4)",
+        color: "rgba(220,50,225,0.1)",
       }),
     }),
   },
