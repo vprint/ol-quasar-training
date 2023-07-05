@@ -40,6 +40,7 @@ class LayersAndStyle {
       source: this.features.getSource(),
       name: LAYERS_SETTINGS.SELECTION_LAYER.NAME,
       zIndex: LAYERS_SETTINGS.SELECTION_LAYER.ZINDEX,
+      visible: LAYERS_SETTINGS.SELECTION_LAYER.VISIBLE,
     });
 
     // Layer d'édition

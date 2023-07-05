@@ -29,15 +29,6 @@
         <div class="merriweather">Cliquer sur une entité de la carte afin de la sélectionner.</div>
         <q-stepper-navigation>
           <feature-selector @selector-next="enableModification" @selector-back="disableSelectionState" />
-          <!-- <q-table v-if="features.length > 1" square flat bordered square title="Entités" :rows="features" :columns="columns"
-            row-key="id_" selection="single" v-model:selected="selected">
-            <template v-slot:bottom>
-              <q-space />
-              <q-btn square flat @click="disableSelectionState" color="primary" label="Retour" class="q-ml-sm" />
-              <q-btn @click="enableModification" :disable="selected.length < 1" color="primary" icon="done"
-                label="Continuer" class="merriweather" />
-            </template>
-          </q-table>-->
         </q-stepper-navigation>
       </q-step>
 
@@ -45,6 +36,7 @@
         <div class="merriweather">Ajouter ou modifier les informations</div>
         <q-stepper-navigation>
           <q-select v-model="model" :options="types" label="Types" />
+          <q-input v-model="observation" label="Observation" />
           <br>
           <div class="row justify-end">
             <q-btn square flat @click="disableModification" color="primary" label="Retour" class="q-ml-sm merriweather" />
@@ -67,6 +59,7 @@ const step = ref(1);
 const selected = ref([])
 const typology = ref({})
 const types = ref([])
+const observation = ref(null)
 formatTypology()
 const model = ref(null)
 
@@ -103,6 +96,7 @@ function disableSelectionState() {
 function enableModification(feature) {
   step.value = 4
   model.value = typology.value[feature[0].properties_.id_typology]
+  observation.value = feature[0].properties_.commentaire
 }
 
 /**

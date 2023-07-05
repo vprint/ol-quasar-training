@@ -4,10 +4,6 @@ import { LAYERS_SETTINGS } from "src/miscellaneous/enum";
 export const useMapStore = defineStore("map", {
   state: () => ({
     map: null,
-    layers: {
-      edition: null,
-      selection: null,
-    },
   }),
   getters: {
     mainMap() {
@@ -15,6 +11,9 @@ export const useMapStore = defineStore("map", {
     },
     selectionLayer() {
       return this.map.getLayers().getArray().find(layer => layer.get('name') == LAYERS_SETTINGS.SELECTION_LAYER.NAME)
+    },
+    MapLayer() {
+      return this.map.getLayers().getArray().find(layer => layer.get('name') == LAYERS_SETTINGS.VECTOR_TILES.NAME)
     }
   },
   actions: {
