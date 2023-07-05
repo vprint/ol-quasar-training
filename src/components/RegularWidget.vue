@@ -19,7 +19,7 @@ defineProps({
 .regular-card
   background-color: $secondary
   border-radius: 0px
-  border-width: 1px 1px 1px 0px
+  border-width: 0px 1px 1px 0px
   border-style: solid
   border-color: rgba(0, 0, 0, 0.2)
   padding: 0px 0
@@ -35,7 +35,7 @@ defineProps({
   min-width: 270px
   height: 48px
   border-radius: 0
-  border-width: 1px 1px 1px 0px
+  border-width: 1px 1px 0px 0px
   border-style: solid
   border-color: rgba(0,0,0,0.2)
   display: flex
