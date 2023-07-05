@@ -1,5 +1,5 @@
 <template>
-  <q-page-sticky position="bottom-left" class="q-px-md q-py-md">
+  <q-page-sticky position="bottom-right" class="q-px-md q-py-md">
     <q-btn fab icon="mdi-layers" color="secondary" text-color="primary" />
   </q-page-sticky>
 </template>
