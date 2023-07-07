@@ -15,6 +15,8 @@ import { useMapStore } from "src/stores/map-store";
 import { ref, onUnmounted } from 'vue';
 import ApiRequestor from "src/Services/ApiRequestor";
 import { LAYERS_SETTINGS } from "src/miscellaneous/enum";
+import GeoJSON from 'ol/format/GeoJSON'
+import { easeOut } from 'ol/easing';
 
 const emit = defineEmits(['selectorBack', 'selectorNext'])
 
@@ -42,17 +44,18 @@ let typology = {}
 let types = []
 let selectedFeatureId = null
 let featuresSelector = null
+let FeaturesBbox = null
 
 formatTypology()
 enableSelection()
-mapStore.selectionLayer.setStyle(selectionStyle)
+//mapStore.selectionLayer.setStyle(selectionStyle)
 
 
 /**
- * Fonction de requêtage des typologies
+ * Fonction de requêtage des typologies.
  */
 async function formatTypology() {
-  // Reqête du style
+  // Requête du style
   let query = await ApiRequestor.getTypology();
   for (let type of query) {
     typology[type.id_typology] = type.typology_name
@@ -60,8 +63,14 @@ async function formatTypology() {
   }
 }
 
+async function getBbox(selectedElement) {
+  // Requête les étendues des features
+  FeaturesBbox = await ApiRequestor.getBoundingBox(selectedElement);
+}
+
 /**
- * Fonction de sélection
+ *
+ * Fonction de sélection des entités sur la carte.
  */
 function enableSelection() {
   featuresSelector = (e) => {
@@ -73,16 +82,34 @@ function enableSelection() {
         return layer.get('name') === LAYERS_SETTINGS.VECTOR_TILES.NAME;
       }
     });
+    // Lorsqu'une entité est selectionnée, selectedIds se met à jour avec la liste des ids des entités sélectionnées.
     selectedIds = features.value.map(feature => feature.getId())
+    // Application du style de sélection et rafraichissement de l'affichage.
     mapStore.selectionLayer.setStyle(selectionStyle)
     mapStore.selectionLayer.changed()
+    getBbox(selectedIds)
   }
   mapStore.map.on("click", featuresSelector);
 };
 
+/**
+ * Fonction de gestion de la sélection d'une ligne du tableau.
+ * @param {Object} selectedRow
+ */
 function onRowSelection(selectedRow) {
   if (selectedRow.added) {
     selectedFeatureId = selectedRow.rows[0].getId()
+    let featureExtent = FeaturesBbox.find(x => x.id === selectedFeatureId)
+    let bboxGeometry = new GeoJSON().readGeometry(featureExtent.geometry, {
+      dataProjection: 'EPSG:4326',
+      featureProjection: 'EPSG:3857'
+    })
+    mapStore.mainMap.getView().fit(bboxGeometry, {
+      padding: [50, 50, 50, 600],
+      maxZoom: 17,
+      duration: 250,
+      easing: easeOut
+    })
     mapStore.selectionLayer.setStyle(selectedFeatureStyle)
   } else {
     mapStore.selectionLayer.setStyle(selectionStyle)
@@ -90,7 +117,7 @@ function onRowSelection(selectedRow) {
 }
 
 /**
- * Definition du style des entités remontées par la sélection
+ * Definition du style des entités remontées par la sélection.
  */
 function selectionStyle(feature) {
   if (selectedIds.includes(feature.getId())) {
@@ -99,7 +126,7 @@ function selectionStyle(feature) {
 }
 
 /**
- * Definition du style de l'entité sélectionnée
+ * Definition du style de l'entité sélectionnée.
  */
 function selectedFeatureStyle(feature) {
   if (selectedFeatureId === feature.getId()) {
@@ -117,7 +144,7 @@ function next() {
 }
 
 /**
- * Remise à 0 des valeurs
+ * Réinitialise les valeurs.
  */
 function reset() {
   features.value.length = 0

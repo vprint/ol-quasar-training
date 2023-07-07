@@ -84,6 +84,20 @@ class ApiRequestor {
   }
 
   /**
+   * Récupération des étendues
+   * @param {Objet} ids - liste des entités
+   */
+    static async getBoundingBox(ids) {
+      const result = await this.getJSON(
+        `${CONNECTION_PROPERTIES.FeatureServer.Functions}carto.get_bbox/items?ids=${ids}`,
+        {
+          errorMsg: API_REQUESTOR.SERVER_ERROR,
+        }
+      );
+      return result.features;
+    }
+
+  /**
    * Verification du status du serveur
    */
   static async getFeatureServerStatus() {
