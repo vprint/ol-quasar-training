@@ -49,7 +49,7 @@ export const LAYERS_SETTINGS = {
         width: 4,
       }),
       fill: new Fill({
-        color: "rgba(220,50,225,0.1)",
+        color: "rgba(220,50,225,0)",
       }),
     }),
     VISIBLE: false,
