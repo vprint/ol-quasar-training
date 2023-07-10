@@ -110,7 +110,7 @@ class ApiRequestor {
     return !result ? false : true;
   }
 
-  static async transactWFS(mode, feature) {
+  static async wfsTransaction(mode, feature) {
     const wfsSerializer = new WFS();
     const xmlSerializer = new XMLSerializer();
     let transactionRequest = null;
@@ -166,7 +166,7 @@ class ApiRequestor {
    * @param {Object} feature - entité à insérer
    */
   static async insertFeature(feature) {
-    const createFeature = await this.transactWFS("insert", feature);
+    const createFeature = await this.wfsTransaction("insert", feature);
     if (createFeature.totalInserted === 1) {
       Notifier.Push({
         mode: "success",
@@ -187,7 +187,7 @@ class ApiRequestor {
    * @param {Object} feature - entité à mettre à jour
    */
   static async updateFeature(feature) {
-    const updateFeature = await this.transactWFS("update", feature);
+    const updateFeature = await this.wfsTransaction("update", feature);
     if (updateFeature.totalUpdated === 1) {
       Notifier.Push({
         mode: "success",
@@ -208,7 +208,7 @@ class ApiRequestor {
    * @param {Object} feature - entité à supprimer
    */
   static async deleteFeature(feature) {
-    const deleteFeature = await this.transactWFS("delete", feature);
+    const deleteFeature = await this.wfsTransaction("delete", feature);
     if (deleteFeature.totalDeleted === 1) {
       Notifier.Push({
         mode: "success",

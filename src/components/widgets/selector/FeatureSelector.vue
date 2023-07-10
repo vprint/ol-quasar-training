@@ -1,6 +1,7 @@
 <template>
-  <q-table v-if="features.length > 0" dense flat bordered square title="Entités" :rows="features" :columns="columns"
-    row-key="id_" selection="single" v-model:selected="selected" rows-per-page-options=0 @selection="onRowSelection">
+  <q-table v-if="features.length > 0" flat bordered square title="Entités" :rows="features" :columns="columns"
+    row-key="id_" selection="single" v-model:selected="selected" :rows-per-page-options=maxTableRows
+    @selection="onRowSelection" class="regular-selector shadow-4">
     <template v-slot:bottom>
       <q-space />
       <q-btn flat square @click="back" color="primary" label="Retour" class="q-ml-sm" />
@@ -23,6 +24,7 @@ const emit = defineEmits(['selectorBack', 'selectorNext'])
 const features = ref([])
 const mapStore = useMapStore();
 const selected = ref([])
+const maxTableRows = ref([0])
 const columns = [
   {
     name: 'FeatureType',
@@ -48,7 +50,6 @@ let FeaturesBbox = null
 
 formatTypology()
 enableSelection()
-//mapStore.selectionLayer.setStyle(selectionStyle)
 
 
 /**
@@ -57,7 +58,7 @@ enableSelection()
 async function formatTypology() {
   // Requête du style
   let query = await ApiRequestor.getTypology();
-  for (let type of query) {
+  for (const type of query) {
     typology[type.id_typology] = type.typology_name
     types.push(type.typology_name)
   }
@@ -78,9 +79,7 @@ function enableSelection() {
     mapStore.selectionLayer.setVisible(true)
     features.value = mapStore.map.getFeaturesAtPixel(e.pixel, {
       hitTolerance: 5,
-      layerFilter: function (layer) {
-        return layer.get('name') === LAYERS_SETTINGS.VECTOR_TILES.NAME;
-      }
+      layerFilter: (layer) => layer.get('name') === LAYERS_SETTINGS.VECTOR_TILES.NAME
     });
     // Lorsqu'une entité est selectionnée, selectedIds se met à jour avec la liste des ids des entités sélectionnées.
     selectedIds = features.value.map(feature => feature.getId())
@@ -94,6 +93,7 @@ function enableSelection() {
 
 /**
  * Fonction de gestion de la sélection d'une ligne du tableau.
+ * La fonction récupère la ligne sélectionnée puis centre la carte sur la feature et applique le style uniquement pour la nouvelle feature sélectionnée.
  * @param {Object} selectedRow
  */
 function onRowSelection(selectedRow) {
@@ -107,7 +107,7 @@ function onRowSelection(selectedRow) {
     mapStore.mainMap.getView().fit(bboxGeometry, {
       padding: [50, 50, 50, 600],
       maxZoom: 17,
-      duration: 250,
+      duration: 1000,
       easing: easeOut
     })
     mapStore.selectionLayer.setStyle(selectedFeatureStyle)
@@ -118,6 +118,7 @@ function onRowSelection(selectedRow) {
 
 /**
  * Definition du style des entités remontées par la sélection.
+ * * @param {Object} feature
  */
 function selectionStyle(feature) {
   if (selectedIds.includes(feature.getId())) {
@@ -127,6 +128,7 @@ function selectionStyle(feature) {
 
 /**
  * Definition du style de l'entité sélectionnée.
+ * @param {Object} feature
  */
 function selectedFeatureStyle(feature) {
   if (selectedFeatureId === feature.getId()) {
@@ -134,11 +136,17 @@ function selectedFeatureStyle(feature) {
   }
 }
 
+/**
+ * Fonction de retour à l'étape précéddente
+ */
 function back() {
   emit('selectorBack');
   reset()
 }
 
+/**
+ * Fonction de passage à l'étape suivante
+ */
 function next() {
   emit('selectorNext', selected.value)
 }
@@ -151,6 +159,7 @@ function reset() {
   selectedIds.length = 0
   selectedFeatureId = null
   mapStore.selectionLayer.setVisible(false)
+  selected.value.length = 0
 }
 
 onUnmounted(() => {
@@ -158,4 +167,7 @@ onUnmounted(() => {
 });
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="sass" scoped>
+.regular-selector
+  background-color: $secondary
+</style>

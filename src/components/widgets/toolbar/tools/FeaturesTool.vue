@@ -35,16 +35,47 @@
       <q-step :name="4" title="Gestion attributaire" icon="view_headline" class="merriweather">
         <div class="merriweather">Ajouter ou modifier les informations</div>
         <q-stepper-navigation>
-          <q-select v-model="model" :options="types" label="Types" />
-          <q-input v-model="observation" label="Observation" />
-          <br>
-          <div class="row justify-end">
-            <q-btn square flat @click="disableModification" color="primary" label="Retour" class="q-ml-sm merriweather" />
-            <q-btn square color="primary" label="Enregistrer" class="merriweather" icon="save" />
-          </div>
+          <q-form @reset="disableModification" class="q-gutter-md">
+            <q-select v-model="featureType" :options="types" label="Types" />
+            <q-input v-model="observation" label="Observation" />
+            <br>
+            <div class="row justify-end">
+              <q-btn square flat type="reset" color="primary" label="Retour" />
+              <q-space />
+              <q-btn square @click="deleting = true" color="primary" label="Supprimer" class="q-mr-sm" />
+              <q-btn square @click="saving = true" color="positive" label="Enregistrer" class="merriweather" />
+            </div>
+          </q-form>
         </q-stepper-navigation>
       </q-step>
     </q-stepper>
+    <q-dialog v-model="deleting" persistent>
+      <q-card>
+        <q-card-section class="row items-center">
+          <q-avatar icon="sym_o_delete" color="primary" text-color="white" />
+          <span class="q-ml-sm">Cette action est définitive. Confirmer la suppression ?</span>
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat label="Annuler" color="primary" v-close-popup />
+          <q-btn flat label="Supprimer" color="primary" @click="deleteFeature" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
+    <q-dialog v-model="saving" persistent>
+      <q-card>
+        <q-card-section class="row items-center">
+          <q-avatar icon="save" color="primary" text-color="white" />
+          <span class="q-ml-sm">Cette action est définitive. Confirmer les modifications' ?</span>
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat label="Annuler" color="primary" v-close-popup />
+          <q-btn flat label="Enregistrer" color="primary" @click="saveFeature" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </RegularWidget>
 </template>
 
@@ -53,15 +84,23 @@ import { ref } from 'vue';
 import FeatureSelector from '../../selector/FeatureSelector.vue'
 import RegularWidget from '../../../RegularWidget.vue';
 import ApiRequestor from 'src/Services/ApiRequestor';
+import GeoJSON from 'ol/format/GeoJSON'
+import { useMapStore } from "src/stores/map-store";
 
+const mapStore = useMapStore();
 const actionType = ref(null);
 const step = ref(1);
-const selected = ref([])
 const typology = ref({})
 const types = ref([])
 const observation = ref(null)
+const featureType = ref(null)
+const deleting = ref(false)
+const saving = ref(false)
+
+let workingFeature = null
+
+
 formatTypology()
-const model = ref(null)
 
 /**
  * Fonction de requêtage des typologies
@@ -93,9 +132,14 @@ function disableSelectionState() {
 /**
  * Fonction d'activation de l'étape de modification
  */
-function enableModification(feature) {
+async function enableModification(feature) {
+  let getFeature = await ApiRequestor.getFeatureById(feature[0].getId())
+  workingFeature = new GeoJSON().readFeature(getFeature, {
+    dataProjection: 'EPSG:4326',
+    featureProjection: 'EPSG:3857'
+  })
   step.value = 4
-  model.value = typology.value[feature[0].properties_.id_typology]
+  featureType.value = typology.value[feature[0].properties_.id_typology]
   observation.value = feature[0].properties_.commentaire
 }
 
@@ -104,6 +148,26 @@ function enableModification(feature) {
  */
 function disableModification() {
   step.value = actionType.value === 'select' ? 3 : 2
+}
+
+async function deleteFeature() {
+  let featureToDelete = wfsFormatter(workingFeature);
+  await ApiRequestor.deleteFeature(featureToDelete);
+  mapStore.MapLayer.getSource().refresh();
+}
+
+async function saveFeature() {
+  let featureToUpdate = wfsFormatter(workingFeature);
+  await ApiRequestor.updateFeature(featureToUpdate);
+  mapStore.MapLayer.getSource().refresh();
+}
+
+function wfsFormatter(feature) {
+  feature.set('id_typology', Object.keys(typology.value).find(key => typology.value[key] === featureType.value));
+  feature.set('commentaire', observation.value);
+  feature.setGeometryName('geom');
+  feature.unset('id');
+  return feature;
 }
 
 </script>
