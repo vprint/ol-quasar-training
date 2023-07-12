@@ -67,7 +67,7 @@
       <q-card>
         <q-card-section class="row items-center">
           <q-avatar icon="save" color="primary" text-color="white" />
-          <span class="q-ml-sm">Cette action est définitive. Confirmer les modifications' ?</span>
+          <span class="q-ml-sm">Cette action est définitive. Confirmer les modifications ?</span>
         </q-card-section>
 
         <q-card-actions align="right">
