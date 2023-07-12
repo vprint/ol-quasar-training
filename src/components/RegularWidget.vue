@@ -23,7 +23,7 @@ defineProps({
   border-style: solid
   border-color: rgba(0, 0, 0, 0.2)
   padding: 0px 0
-  height: calc(100vh - 90px)
+  height: calc(100vh - 100px)
   overflow: auto
 .regular-header
   background-color: $primary

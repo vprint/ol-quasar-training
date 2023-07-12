@@ -17,6 +17,7 @@ import WidgetToolbar from '../components/widgets/toolbar/WidgetToolbar.vue';
 import LayersAndStyle from '../MapElement/LayersAndStyle';
 import LayersTool from '../components/widgets/LayersTool.vue'
 import { useMapStore } from '../stores/map-store';
+import { ScaleLine } from 'ol/control.js';
 import { ref, onMounted } from 'vue'
 
 const mapStore = useMapStore();
@@ -28,12 +29,20 @@ onMounted(() => {
     controls: [],
     view: new View({
       center: fromLonLat(MAP_SETTINGS.CENTER),
-      zoom: MAP_SETTINGS.ZOOM
+      zoom: MAP_SETTINGS.ZOOM,
+      maxZoom: MAP_SETTINGS.MAXZOOM,
+      minZoom: MAP_SETTINGS.MINZOOM
     }),
   })
   map.value.addInteraction(new Link({
     params: ['x', 'y', 'z', 'r']
   }))
+  map.value.addControl(new ScaleLine({
+    units: 'metric',
+    bar: false,
+    text: true,
+    minWidth: 140
+  }));
   new LayersAndStyle({
     map: map.value
   })
@@ -41,13 +50,12 @@ onMounted(() => {
 })
 </script>
 
-<style>
-@import "ol/ol.css";
+<style lang="sass">
+@import "ol/ol.css"
 
-#map {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 100%;
-}
+#map
+  position: absolute
+  top: 0
+  bottom: 0
+  width: 100%
 </style>
