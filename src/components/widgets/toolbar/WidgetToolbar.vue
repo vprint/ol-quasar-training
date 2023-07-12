@@ -12,12 +12,26 @@
             {{ item.tooltip }}
           </q-tooltip>
         </q-item>
+        <q-separator />
+        <q-item clickable @click="zoomer(true)">
+          <q-item-section avatar>
+            <q-icon name="sym_o_add" />
+          </q-item-section>
+        </q-item>
+        <q-item clickable @click="zoomer(false)">
+          <q-item-section avatar>
+            <q-icon name="sym_o_remove" />
+          </q-item-section>
+        </q-item>
       </q-list>
     </div>
     <div class="content no-shadow">
       <keep-alive>
         <component :is="menuItems[link]?.tool" :width="menuItems[link]?.width"></component>
       </keep-alive>
+    </div>
+    <div class="q-ml-sm">
+      <draw-tool />
     </div>
   </div>
 </template>
@@ -27,15 +41,31 @@ import { ref, shallowRef } from 'vue';
 import FeaturesTool from './tools/FeaturesTool.vue';
 import ProcessingTool from './tools/ProcessingTool.vue';
 import InformationTool from './tools/InformationTool.vue';
+import DrawTool from '../DrawTool.vue';
+import { useMapStore } from 'src/stores/map-store';
+import { easeOut } from 'ol/easing';
 
 const link = ref(null)
 const delay = ref(700)
+const mapStore = useMapStore()
 
 const menuItems = shallowRef({
-  FeaturesTool: { tool: FeaturesTool, width: '500px', title: 'FeaturesTool', icon: 'mdi-map', tooltip: 'Features' },
+  FeaturesTool: { tool: FeaturesTool, width: '450px', title: 'FeaturesTool', icon: 'mdi-map', tooltip: 'Features' },
   ProcessingTool: { tool: ProcessingTool, width: '400px', title: 'ProcessingTool', icon: 'handyman', tooltip: 'Processings' },
   InformationTool: { tool: InformationTool, width: '400px', title: 'InformationTool', icon: 'info', tooltip: 'Information' }
 })
+
+/**
+ * Fonction de zoom.
+ * @param {Boolean} boolean. Si vrai, alors zoom avant, sinon zoom arrière
+ */
+function zoomer(boolean) {
+  mapStore.mainMap.getView().animate({
+    zoom: boolean ? mapStore.mainMap.getView().getZoom() + 1 : mapStore.mainMap.getView().getZoom() - 1,
+    duration: 250,
+    easing: easeOut
+  })
+}
 </script>
 
 <style lang="sass" scoped>
