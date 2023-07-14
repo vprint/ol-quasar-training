@@ -1,4 +1,5 @@
 import { Fill, Stroke, Style } from "ol/style";
+import { HIDDEN_TOKEN } from "./key";
 
 export const CONNECTION_PROPERTIES = {
   BASE_URL: "http://localhost",
@@ -32,6 +33,7 @@ export const LAYERS_SETTINGS = {
       ATTRIBUTION: [
         '<a href="http://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank" class="jawg-attrib">&copy; <b>Jawg</b>Maps</a> | <a href="https://www.openstreetmap.org/copyright" title="OpenStreetMap is open data licensed under ODbL" target="_blank" class="osm-attrib">&copy; OSM contributors</a>',
       ],
+      TOKEN: HIDDEN_TOKEN.JAWGS,
       ZINDEX: 1,
     },
   },
