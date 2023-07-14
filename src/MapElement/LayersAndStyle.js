@@ -80,7 +80,7 @@ class LayersAndStyle {
    * Fonction de requêtage des styles
    */
   async initializeStyle() {
-    // Reqête du style
+    // Requête du style
     let JSONStyle = await ApiRequestor.getStyles();
 
     // Décomposition des styles reçus

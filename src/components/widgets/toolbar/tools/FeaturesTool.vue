@@ -106,9 +106,9 @@ formatTypology()
  * Fonction de requêtage des typologies
 */
 async function formatTypology() {
-  // Reqête du style
-  let query = await ApiRequestor.getTypology();
-  for (let type of query) {
+  // Requête du style
+  let fetchTypologies = await ApiRequestor.getTypologies();
+  for (let type of fetchTypologies) {
     typology.value[type.id_typology] = type.typology_name
     types.value.push(type.typology_name)
   }

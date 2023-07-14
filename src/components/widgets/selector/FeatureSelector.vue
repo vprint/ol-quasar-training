@@ -57,8 +57,8 @@ enableSelection()
  */
 async function formatTypology() {
   // Requête du style
-  let query = await ApiRequestor.getTypology();
-  for (const type of query) {
+  let fetchTypologies = await ApiRequestor.getTypologies();
+  for (const type of fetchTypologies) {
     typology[type.id_typology] = type.typology_name
     types.push(type.typology_name)
   }

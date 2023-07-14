@@ -59,7 +59,7 @@ class ApiRequestor {
   /**
    * Récupération des valeurs de typologie
    */
-  static async getTypology() {
+  static async getTypologies() {
     const result = await this.getJSON(
       `${CONNECTION_PROPERTIES.FeatureServer.Functions}carto.get_typology/items`,
       {
