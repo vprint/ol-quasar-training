@@ -13,12 +13,12 @@
           </q-tooltip>
         </q-item>
         <q-separator />
-        <q-item clickable @click="zoomer(true)">
+        <q-item clickable @click="zoom(1)">
           <q-item-section avatar>
             <q-icon name="sym_o_add" />
           </q-item-section>
         </q-item>
-        <q-item clickable @click="zoomer(false)">
+        <q-item clickable @click="zoom(-1)">
           <q-item-section avatar>
             <q-icon name="sym_o_remove" />
           </q-item-section>
@@ -57,11 +57,11 @@ const menuItems = shallowRef({
 
 /**
  * Fonction de zoom.
- * @param {Boolean} boolean. Si vrai, alors zoom avant, sinon zoom arrière
+ * @param {Number} value. Valeur de zoom à appliquer
  */
-function zoomer(boolean) {
+function zoom(value) {
   mapStore.mainMap.getView().animate({
-    zoom: boolean ? mapStore.mainMap.getView().getZoom() + 1 : mapStore.mainMap.getView().getZoom() - 1,
+    zoom: mapStore.mainMap.getView().getZoom() + value,
     duration: 250,
     easing: easeOut
   })
