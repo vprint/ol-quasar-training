@@ -27,3 +27,6 @@ yarn-error.log*
 *.ntvs*
 *.njsproj
 *.sln
+
+#key. Ce fichier est un simple enum contenant la clé JAWG. Pas super utile dans la mesure ou la clé apparait dans l'URL de requête.
+/src/miscellaneous/key.js
