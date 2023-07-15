@@ -54,11 +54,18 @@ class LayersAndStyle {
 
     // Fond de plan OSM
     this.osmLayer = new TileLayer({
-      source: new OSM(),
-      visible: false,
+      source: new XYZ({
+        url: `${LAYERS_SETTINGS.BACKGROUND.OSM.URL}`,
+        tilePixelRatio: 2,
+        zIndex: 1,
+        attributions: [LAYERS_SETTINGS.BACKGROUND.OSM.ATTRIBUTION],
+      }),
+      zIndex: LAYERS_SETTINGS.BACKGROUND.OSM.ZINDEX,
+      name: LAYERS_SETTINGS.BACKGROUND.OSM.NAME,
+      visible: LAYERS_SETTINGS.BACKGROUND.OSM.VISIBLE
     });
 
-    // Fond de plan JawgMaps
+    // Fond de plan JawgMaps basique
     this.JawgMapsStreets = new TileLayer({
       source: new XYZ({
         url: `${LAYERS_SETTINGS.BACKGROUND.JAWGMAPS_STREETS.URL}access-token=${LAYERS_SETTINGS.BACKGROUND.JAWGMAPS_STREETS.TOKEN}`,
@@ -67,6 +74,21 @@ class LayersAndStyle {
         attributions: [LAYERS_SETTINGS.BACKGROUND.JAWGMAPS_STREETS.ATTRIBUTION],
       }),
       zIndex: LAYERS_SETTINGS.BACKGROUND.JAWGMAPS_STREETS.ZINDEX,
+      name: LAYERS_SETTINGS.BACKGROUND.JAWGMAPS_STREETS.NAME,
+      visible: LAYERS_SETTINGS.BACKGROUND.JAWGMAPS_STREETS.VISIBLE
+    });
+
+    // Fond de plan JawgMaps clair
+    this.JawgMapsLight = new TileLayer({
+      source: new XYZ({
+        url: `${LAYERS_SETTINGS.BACKGROUND.JAWGMAPS_LIGHT.URL}access-token=${LAYERS_SETTINGS.BACKGROUND.JAWGMAPS_LIGHT.TOKEN}`,
+        tilePixelRatio: 2,
+        zIndex: 1,
+        attributions: [LAYERS_SETTINGS.BACKGROUND.JAWGMAPS_LIGHT.ATTRIBUTION],
+      }),
+      zIndex: LAYERS_SETTINGS.BACKGROUND.JAWGMAPS_LIGHT.ZINDEX,
+      name: LAYERS_SETTINGS.BACKGROUND.JAWGMAPS_LIGHT.NAME,
+      visible: LAYERS_SETTINGS.BACKGROUND.JAWGMAPS_LIGHT.VISIBLE
     });
 
     map.addLayer(this.features);
@@ -74,6 +96,7 @@ class LayersAndStyle {
     map.addLayer(this.editionLayer);
     map.addLayer(this.osmLayer);
     map.addLayer(this.JawgMapsStreets);
+    map.addLayer(this.JawgMapsLight);
   }
 
   /**
