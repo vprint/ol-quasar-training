@@ -9,8 +9,10 @@
           <div class="column" style="height: 100px">
             <div v-for="layer in backgroundLayers" :key="layer.NAME" class="regular-div">
               <div class="col-3 col-sm-10 button-center">
-                <q-btn round class="q-ma-xs" @click="setLayer(layer.NAME)">
-                  <q-avatar size="70px">
+                <q-btn :ref=layer.NAME round class="round-button"
+                  :class="{ 'round-button-active': isSelected[layer.NAME] && Object.keys(isSelected).length === 1 }"
+                  @click="setLayer(layer.NAME)">
+                  <q-avatar size=" 70px">
                     <img v-if="layer.TOKEN" :src="`${layer.IMG}access-token=${layer.TOKEN}`">
                     <img v-else :src="`${layer.IMG}`">
                   </q-avatar>
@@ -37,6 +39,7 @@ const mapStore = useMapStore()
 const backgroundLayers = ref(LAYERS_SETTINGS.BACKGROUND)
 const buttonColor = ref('secondary')
 const iconColor = ref('primary')
+const isSelected = ref({})
 
 function activateTool() {
   activated.value = !activated.value
@@ -63,6 +66,7 @@ function setLayer(layerName) {
     .getArray()
     .find(layer => layer.get('name') == layerName)
     .setVisible(true)
+  isSelected.value = { [layerName]: true };
 }
 </script>
 
@@ -80,6 +84,13 @@ function setLayer(layerName) {
   bottom:30px
   left: 50%
   transform: translate(-50%, -50%)
+
+.round-button
+  margin: 2px
+
+round-button-active
+  margin: 0px
+  border: 2px solid $primary
 
 .regular-section
   padding: 0px
