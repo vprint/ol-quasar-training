@@ -19,6 +19,7 @@ import LayersTool from '../components/widgets/LayersTool.vue'
 import { useMapStore } from '../stores/map-store';
 import { ScaleLine } from 'ol/control.js';
 import { ref, onMounted } from 'vue'
+import { Attribution } from 'ol/control'
 
 const mapStore = useMapStore();
 const map = ref(null)
@@ -43,6 +44,9 @@ onMounted(() => {
     text: true,
     minWidth: 140
   }));
+  map.value.addControl(new Attribution({
+    collapsible: false,
+  }))
   new LayersAndStyle({
     map: map.value
   })
