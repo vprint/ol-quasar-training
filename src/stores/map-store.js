@@ -19,9 +19,6 @@ export const useMapStore = defineStore("map", {
   actions: {
     defineMap(map) {
       this.map = map;
-    },
-    setOGCFeature(feature) {
-      this.OGCFeature = feature;
-    },
+    }
   },
 });
