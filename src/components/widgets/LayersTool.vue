@@ -10,7 +10,7 @@
             <div v-for="layer in backgroundLayers" :key="layer.NAME" class="regular-div">
               <div class="col-3 col-sm-10 button-center">
                 <q-btn :ref=layer.NAME round class="round-button"
-                  :class="{ 'round-button-active': isSelected[layer.NAME] && Object.keys(isSelected).length === 1 }"
+                  :class="{ 'round-button-active': selectedBackground[layer.NAME] && Object.keys(selectedBackground).length === 1 }"
                   @click="setLayer(layer.NAME)">
                   <q-avatar size=" 70px">
                     <img v-if="layer.TOKEN" :src="`${layer.IMG}access-token=${layer.TOKEN}`">
@@ -39,8 +39,11 @@ const mapStore = useMapStore()
 const backgroundLayers = ref(LAYERS_SETTINGS.BACKGROUND)
 const buttonColor = ref('secondary')
 const iconColor = ref('primary')
-const isSelected = ref({})
+const selectedBackground = ref({ OSM: true })
 
+/**
+ * Fonction d'affichage de l'outil de selection des fonds de plan et changement des couleurs de l'outil
+ */
 function activateTool() {
   activated.value = !activated.value
   if (!activated.value) {
@@ -53,7 +56,13 @@ function activateTool() {
 
 }
 
+/**
+ * Fonction de changement des fonds de plan.
+ * @param {String} layerName Nom de la couche
+ */
 function setLayer(layerName) {
+
+  // Désactivation de toutes les couches visibles
   for (const background in LAYERS_SETTINGS.BACKGROUND) {
     let backgroundLayer = mapStore.mainMap
       .getLayers()
@@ -61,12 +70,16 @@ function setLayer(layerName) {
       .find(layer => layer.get('name') == LAYERS_SETTINGS.BACKGROUND[background].NAME)
     backgroundLayer.setVisible(false)
   }
+
+  // Activation de la couche sélectionnée par l'utilisateur
   mapStore.mainMap
     .getLayers()
     .getArray()
     .find(layer => layer.get('name') == layerName)
     .setVisible(true)
-  isSelected.value = { [layerName]: true };
+
+  // Changement de l'objet de sélection
+  selectedBackground.value = { [layerName]: true };
 }
 </script>
 
@@ -80,17 +93,17 @@ function setLayer(layerName) {
   background-color: grey
   position: fixed
   height: 110px
-  width: 300px
+  width: 350px
   bottom:30px
   left: 50%
   transform: translate(-50%, -50%)
 
 .round-button
-  margin: 2px
+  margin: 3px
 
-round-button-active
+.round-button-active
   margin: 0px
-  border: 2px solid $primary
+  border: 3px solid $primary
 
 .regular-section
   padding: 0px
