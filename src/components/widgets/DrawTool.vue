@@ -1,4 +1,3 @@
-TODO: Implémenter les v-if + logique de l'outil
 <template>
   <div class="drawer no-shadow" style="font-size: 2em">
     <q-list>
@@ -43,6 +42,15 @@ TODO: Implémenter les v-if + logique de l'outil
 </template>
 
 <script setup>
+import { useMapStore } from 'src/stores/map-store';
+import { Modify } from 'ol/interaction'
+
+const mapStore = useMapStore()
+
+mapStore.map.addInteraction(new Modify({
+  source: mapStore.editionLayer.getSource()
+}))
+
 </script>
 
 <style lang="sass" scoped>

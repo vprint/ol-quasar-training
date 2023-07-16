@@ -30,7 +30,7 @@
         <component :is="menuItems[link]?.tool" :width="menuItems[link]?.width"></component>
       </keep-alive>
     </div>
-    <div class="q-ml-sm">
+    <div v-if="drawerState" class="q-ml-sm">
       <draw-tool />
     </div>
   </div>
@@ -44,10 +44,17 @@ import InformationTool from './tools/InformationTool.vue';
 import DrawTool from '../DrawTool.vue';
 import { useMapStore } from 'src/stores/map-store';
 import { easeOut } from 'ol/easing';
+import { useWidgetStore } from 'src/stores/widget-store';
 
 const link = ref(null)
 const delay = ref(700)
 const mapStore = useMapStore()
+const widgetStore = useWidgetStore()
+const drawerState = ref(false)
+
+widgetStore.$subscribe((mutation) => {
+  widgetStore.widget === 'drawTool' ? drawerState.value = true : drawerState.value = false
+});
 
 const menuItems = shallowRef({
   FeaturesTool: { tool: FeaturesTool, width: '450px', title: 'FeaturesTool', icon: 'mdi-map', tooltip: 'Features' },

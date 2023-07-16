@@ -1,3 +1,4 @@
+TODO: DOCUMENTER !
 <template>
   <RegularWidget title="Données cartographiques">
     <q-stepper v-model="step" vertical color="primary" animated class="regular-stepper no-shadow">
@@ -40,10 +41,12 @@
             <q-input v-model="observation" label="Observation" />
             <br>
             <div class="row justify-end">
-              <q-btn square flat type="reset" color="primary" label="Retour" />
+              <q-btn :loading="waiter" square flat type="reset" color="primary" label="Retour" class="shadow-1" />
               <q-space />
-              <q-btn square @click="deleting = true" color="primary" label="Supprimer" class="q-mr-sm" />
-              <q-btn square @click="saving = true" color="positive" label="Enregistrer" class="merriweather" />
+              <q-btn :loading="waiter" square @click="deleting = true" color="primary" label="Supprimer"
+                class="q-mr-sm shadow-1" />
+              <q-btn :loading="waiter" square @click="saving = true" color="positive" label="Enregistrer"
+                class="shadow-1" />
             </div>
           </q-form>
         </q-stepper-navigation>
@@ -53,12 +56,12 @@
       <q-card>
         <q-card-section class="row items-center">
           <q-avatar icon="sym_o_delete" color="primary" text-color="white" />
-          <span class="q-ml-sm">Cette action est définitive. Confirmer la suppression ?</span>
+          <span class="q-ml-sm merriweather">Cette action est définitive. Confirmer la suppression ?</span>
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn flat label="Annuler" color="primary" v-close-popup />
-          <q-btn flat label="Supprimer" color="primary" @click="deleteFeature" v-close-popup />
+          <q-btn flat class="merriweather" label="Annuler" color="primary" v-close-popup />
+          <q-btn flat class="merriweather" label="Supprimer" color="primary" @click="deleteFeature" v-close-popup />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -67,12 +70,12 @@
       <q-card>
         <q-card-section class="row items-center">
           <q-avatar icon="save" color="primary" text-color="white" />
-          <span class="q-ml-sm">Cette action est définitive. Confirmer les modifications ?</span>
+          <span class="q-ml-sm merriweather">Cette action est définitive. Confirmer les modifications ?</span>
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn flat label="Annuler" color="primary" v-close-popup />
-          <q-btn flat label="Enregistrer" color="primary" @click="saveFeature" v-close-popup />
+          <q-btn flat class="merriweather" label="Annuler" color="primary" v-close-popup />
+          <q-btn flat class="merriweather" label="Enregistrer" color="primary" @click="saveFeature" v-close-popup />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -86,8 +89,11 @@ import RegularWidget from '../../../RegularWidget.vue';
 import ApiRequestor from 'src/Services/ApiRequestor';
 import GeoJSON from 'ol/format/GeoJSON'
 import { useMapStore } from "src/stores/map-store";
+import { useWidgetStore } from 'src/stores/widget-store';
+import { Modify } from 'ol/interaction';
 
 const mapStore = useMapStore();
+const widgetStore = useWidgetStore();
 const actionType = ref(null);
 const step = ref(1);
 const typology = ref({})
@@ -96,6 +102,7 @@ const observation = ref(null)
 const featureType = ref(null)
 const deleting = ref(false)
 const saving = ref(false)
+const waiter = ref(false)
 
 let workingFeature = null
 
@@ -138,9 +145,11 @@ async function enableModification(feature) {
     dataProjection: 'EPSG:4326',
     featureProjection: 'EPSG:3857'
   })
+  mapStore.editionLayer.getSource().addFeature(workingFeature)
   step.value = 4
   featureType.value = typology.value[feature[0].properties_.id_typology]
   observation.value = feature[0].properties_.commentaire
+  widgetStore.setActiveWidget('drawTool')
 }
 
 /**
@@ -148,18 +157,27 @@ async function enableModification(feature) {
  */
 function disableModification() {
   step.value = actionType.value === 'select' ? 3 : 2
+  widgetStore.setActiveWidget(null)
 }
 
 async function deleteFeature() {
   let featureToDelete = wfsFormatter(workingFeature);
+  updateWaiter(true)
   await ApiRequestor.deleteFeature(featureToDelete);
-  mapStore.MapLayer.getSource().refresh();
+  mapStore.mapLayer.getSource().refresh();
+  updateWaiter(false)
 }
 
 async function saveFeature() {
   let featureToUpdate = wfsFormatter(workingFeature);
+  updateWaiter(true)
   await ApiRequestor.updateFeature(featureToUpdate);
-  mapStore.MapLayer.getSource().refresh();
+  mapStore.mapLayer.getSource().refresh();
+  updateWaiter(false)
+}
+
+function updateWaiter(bool) {
+  waiter.value = bool
 }
 
 function wfsFormatter(feature) {
