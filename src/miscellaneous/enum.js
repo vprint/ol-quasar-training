@@ -29,7 +29,7 @@ export const MAP_SETTINGS = {
 export const LAYERS_SETTINGS = {
   BACKGROUND: {
     JAWGMAPS_STREETS: {
-      NAME: "Streets",
+      NAME: "Basique",
       URL: "https://tile.jawg.io/jawg-streets/{z}/{x}/{y}@2x.png?",
       IMG: "https://tile.jawg.io/jawg-streets/13/6459/3787@2x.png?",
       ATTRIBUTION: [
@@ -37,12 +37,23 @@ export const LAYERS_SETTINGS = {
       ],
       TOKEN: HIDDEN_TOKEN.JAWGS,
       ZINDEX: 1,
-      VISIBLE: true
+      VISIBLE: false
     },
     JAWGMAPS_LIGHT: {
       NAME: "Clair",
       URL: "https://tile.jawg.io/jawg-light/{z}/{x}/{y}@2x.png?",
       IMG: "https://tile.jawg.io/jawg-light/13/6459/3787@2x.png?",
+      ATTRIBUTION: [
+        '<a href="http://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank" class="jawg-attrib">&copy; <b>Jawg</b>Maps</a> | <a href="https://www.openstreetmap.org/copyright" title="OpenStreetMap is open data licensed under ODbL" target="_blank" class="osm-attrib">&copy; OSM contributors</a>',
+      ],
+      TOKEN: HIDDEN_TOKEN.JAWGS,
+      ZINDEX: 1,
+      VISIBLE: false
+    },
+    JAWGMAPS_DARK: {
+      NAME: "Sombre",
+      URL: "https://tile.jawg.io/jawg-dark/{z}/{x}/{y}@2x.png?",
+      IMG: "https://tile.jawg.io/jawg-dark/13/6459/3787@2x.png?",
       ATTRIBUTION: [
         '<a href="http://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank" class="jawg-attrib">&copy; <b>Jawg</b>Maps</a> | <a href="https://www.openstreetmap.org/copyright" title="OpenStreetMap is open data licensed under ODbL" target="_blank" class="osm-attrib">&copy; OSM contributors</a>',
       ],
@@ -58,7 +69,7 @@ export const LAYERS_SETTINGS = {
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       ],
       ZINDEX: 1,
-      VISIBLE: false
+      VISIBLE: true
     },
   },
   VECTOR_TILES: {
@@ -93,7 +104,7 @@ export const LAYERS_SETTINGS = {
         color: "rgba(220,50,225,0.4)",
       }),
     }),
-    VISIBLE: false,
+    VISIBLE: true,
   },
 };
 

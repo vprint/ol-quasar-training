@@ -52,51 +52,27 @@ class LayersAndStyle {
       visible: LAYERS_SETTINGS.EDITION_LAYER.VISIBLE,
     });
 
-    // Fond de plan OSM
-    this.osmLayer = new TileLayer({
-      source: new XYZ({
-        url: `${LAYERS_SETTINGS.BACKGROUND.OSM.URL}`,
-        tilePixelRatio: 2,
-        zIndex: 1,
-        attributions: [LAYERS_SETTINGS.BACKGROUND.OSM.ATTRIBUTION],
-      }),
-      zIndex: LAYERS_SETTINGS.BACKGROUND.OSM.ZINDEX,
-      name: LAYERS_SETTINGS.BACKGROUND.OSM.NAME,
-      visible: LAYERS_SETTINGS.BACKGROUND.OSM.VISIBLE
-    });
-
-    // Fond de plan JawgMaps basique
-    this.JawgMapsStreets = new TileLayer({
-      source: new XYZ({
-        url: `${LAYERS_SETTINGS.BACKGROUND.JAWGMAPS_STREETS.URL}access-token=${LAYERS_SETTINGS.BACKGROUND.JAWGMAPS_STREETS.TOKEN}`,
-        tilePixelRatio: 2,
-        zIndex: 1,
-        attributions: [LAYERS_SETTINGS.BACKGROUND.JAWGMAPS_STREETS.ATTRIBUTION],
-      }),
-      zIndex: LAYERS_SETTINGS.BACKGROUND.JAWGMAPS_STREETS.ZINDEX,
-      name: LAYERS_SETTINGS.BACKGROUND.JAWGMAPS_STREETS.NAME,
-      visible: LAYERS_SETTINGS.BACKGROUND.JAWGMAPS_STREETS.VISIBLE
-    });
-
-    // Fond de plan JawgMaps clair
-    this.JawgMapsLight = new TileLayer({
-      source: new XYZ({
-        url: `${LAYERS_SETTINGS.BACKGROUND.JAWGMAPS_LIGHT.URL}access-token=${LAYERS_SETTINGS.BACKGROUND.JAWGMAPS_LIGHT.TOKEN}`,
-        tilePixelRatio: 2,
-        zIndex: 1,
-        attributions: [LAYERS_SETTINGS.BACKGROUND.JAWGMAPS_LIGHT.ATTRIBUTION],
-      }),
-      zIndex: LAYERS_SETTINGS.BACKGROUND.JAWGMAPS_LIGHT.ZINDEX,
-      name: LAYERS_SETTINGS.BACKGROUND.JAWGMAPS_LIGHT.NAME,
-      visible: LAYERS_SETTINGS.BACKGROUND.JAWGMAPS_LIGHT.VISIBLE
-    });
+    for (let background in LAYERS_SETTINGS.BACKGROUND) {
+      map.addLayer(
+        new TileLayer({
+          source: new XYZ({
+            url: LAYERS_SETTINGS.BACKGROUND[background].TOKEN ?
+              `${LAYERS_SETTINGS.BACKGROUND[background].URL}access-token=${LAYERS_SETTINGS.BACKGROUND[background].TOKEN}` :
+              `${LAYERS_SETTINGS.BACKGROUND[background].URL}`,
+            tilePixelRatio: 2,
+            zIndex: 1,
+            attributions: [LAYERS_SETTINGS.BACKGROUND[background].ATTRIBUTION],
+          }),
+          zIndex: LAYERS_SETTINGS.BACKGROUND[background].ZINDEX,
+          name: LAYERS_SETTINGS.BACKGROUND[background].NAME,
+          visible: LAYERS_SETTINGS.BACKGROUND[background].VISIBLE
+        })
+      )
+    }
 
     map.addLayer(this.features);
     map.addLayer(this.selectionLayer);
     map.addLayer(this.editionLayer);
-    map.addLayer(this.osmLayer);
-    map.addLayer(this.JawgMapsStreets);
-    map.addLayer(this.JawgMapsLight);
   }
 
   /**
