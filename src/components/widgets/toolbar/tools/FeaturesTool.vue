@@ -1,4 +1,3 @@
-TODO: DOCUMENTER !
 <template>
   <RegularWidget title="Données cartographiques">
     <q-stepper v-model="step" vertical color="primary" animated class="regular-stepper no-shadow">
@@ -160,6 +159,9 @@ function disableModification() {
   widgetStore.setActiveWidget(null)
 }
 
+/**
+ * Supprimer les entités via une requête WFS
+ */
 async function deleteFeature() {
   let featureToDelete = wfsFormatter(workingFeature);
   updateWaiter(true)
@@ -168,6 +170,9 @@ async function deleteFeature() {
   updateWaiter(false)
 }
 
+/**
+ * Enregistrer les modifications apportées entités via une requête WFS
+ */
 async function saveFeature() {
   let featureToUpdate = wfsFormatter(workingFeature);
   updateWaiter(true)
@@ -176,16 +181,24 @@ async function saveFeature() {
   updateWaiter(false)
 }
 
-function updateWaiter(bool) {
-  waiter.value = bool
-}
-
+/**
+ * Formate les entités au format WFS
+ * @param {Object} feature Entité à formater
+ */
 function wfsFormatter(feature) {
   feature.set('id_typology', Object.keys(typology.value).find(key => typology.value[key] === featureType.value));
   feature.set('commentaire', observation.value);
   feature.setGeometryName('geom');
   feature.unset('id');
   return feature;
+}
+
+/**
+ * Fonction d'activation et de désactivation du waiter.
+ * @param {Boolean} bool
+ */
+function updateWaiter(bool) {
+  waiter.value = bool
 }
 
 </script>

@@ -47,13 +47,12 @@ const selectedBackground = ref({ OSM: true })
 function activateTool() {
   activated.value = !activated.value
   if (!activated.value) {
-    buttonColor.value = 'secondary'
-    iconColor.value = 'primary'
+    buttonColor.value = 'secondary';
+    iconColor.value = 'primary';
   } else {
-    buttonColor.value = 'primary'
-    iconColor.value = 'secondary'
+    buttonColor.value = 'primary';
+    iconColor.value = 'secondary';
   }
-
 }
 
 /**
@@ -61,23 +60,20 @@ function activateTool() {
  * @param {String} layerName Nom de la couche
  */
 function setLayer(layerName) {
-
   // Désactivation de toutes les couches visibles
   for (const background in LAYERS_SETTINGS.BACKGROUND) {
     let backgroundLayer = mapStore.mainMap
       .getLayers()
       .getArray()
-      .find(layer => layer.get('name') == LAYERS_SETTINGS.BACKGROUND[background].NAME)
-    backgroundLayer.setVisible(false)
+      .find(layer => layer.get('name') == LAYERS_SETTINGS.BACKGROUND[background].NAME);
+    backgroundLayer.setVisible(false);
   }
-
   // Activation de la couche sélectionnée par l'utilisateur
   mapStore.mainMap
     .getLayers()
     .getArray()
     .find(layer => layer.get('name') == layerName)
-    .setVisible(true)
-
+    .setVisible(true);
   // Changement de l'objet de sélection
   selectedBackground.value = { [layerName]: true };
 }

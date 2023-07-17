@@ -51,16 +51,18 @@ const delay = ref(700)
 const mapStore = useMapStore()
 const widgetStore = useWidgetStore()
 const drawerState = ref(false)
-
-widgetStore.$subscribe((mutation) => {
-  widgetStore.widget === 'drawTool' ? drawerState.value = true : drawerState.value = false
-});
-
 const menuItems = shallowRef({
   FeaturesTool: { tool: FeaturesTool, width: '450px', title: 'FeaturesTool', icon: 'mdi-map', tooltip: 'Features' },
   ProcessingTool: { tool: ProcessingTool, width: '400px', title: 'ProcessingTool', icon: 'handyman', tooltip: 'Processings' },
   InformationTool: { tool: InformationTool, width: '400px', title: 'InformationTool', icon: 'info', tooltip: 'Information' }
 })
+
+/**
+ * Ecouteur de changement du gestionnaire de widget
+ */
+widgetStore.$subscribe((mutation) => {
+  drawerState.value = widgetStore.widget === 'drawTool' ? true : false;
+});
 
 /**
  * Fonction de zoom.

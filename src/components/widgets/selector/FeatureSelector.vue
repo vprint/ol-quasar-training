@@ -64,13 +64,16 @@ async function formatTypology() {
   }
 }
 
+/**
+ * Fonction de récupération des bbox pour les entités sélectionnées
+ * @param {Array} selectedElement Liste des entités sélectionnées.
+ */
 async function getBbox(selectedElement) {
   // Requête les étendues des features
   FeaturesBbox = await ApiRequestor.getBoundingBox(selectedElement);
 }
 
 /**
- *
  * Fonction de sélection des entités sur la carte.
  */
 function enableSelection() {
@@ -93,7 +96,8 @@ function enableSelection() {
 
 /**
  * Fonction de gestion de la sélection d'une ligne du tableau.
- * La fonction récupère la ligne sélectionnée puis centre la carte sur la feature et applique le style uniquement pour la nouvelle feature sélectionnée.
+ * La fonction récupère la ligne sélectionnée puis centre la carte sur la
+ * feature et applique le style uniquement pour la nouvelle feature sélectionnée.
  * @param {Object} selectedRow
  */
 function onRowSelection(selectedRow) {
@@ -118,7 +122,7 @@ function onRowSelection(selectedRow) {
 
 /**
  * Definition du style des entités remontées par la sélection.
- * * @param {Object} feature
+ * @param {Object} feature
  */
 function selectionStyle(feature) {
   if (selectedIds.includes(feature.getId())) {
@@ -162,6 +166,7 @@ function reset() {
   selected.value.length = 0
 }
 
+// Désactivation de la fonction de sélection lorsque le composant est démonté.
 onUnmounted(() => {
   mapStore.map.un("click", featuresSelector);
 });
