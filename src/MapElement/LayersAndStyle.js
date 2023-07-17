@@ -33,25 +33,27 @@ class LayersAndStyle {
       preload: Infinity,
       style: this.cartoFunction.bind(this),
     });
+    map.addLayer(this.features)
 
     // Layer de sélection
-    this.selectionLayer = new VectorTileLayer({
+    map.addLayer(new VectorTileLayer({
       renderMode: "vector",
       source: this.features.getSource(),
       name: LAYERS_SETTINGS.SELECTION_LAYER.NAME,
       zIndex: LAYERS_SETTINGS.SELECTION_LAYER.ZINDEX,
       visible: LAYERS_SETTINGS.SELECTION_LAYER.VISIBLE,
-    });
+    }));
 
     // Layer d'édition
-    this.editionLayer = new VectorLayer({
+    map.addLayer(new VectorLayer({
       source: new VectorSource(),
       zIndex: LAYERS_SETTINGS.EDITION_LAYER.ZINDEX,
       name: LAYERS_SETTINGS.EDITION_LAYER.NAME,
       style: LAYERS_SETTINGS.EDITION_LAYER.STYLE,
       visible: LAYERS_SETTINGS.EDITION_LAYER.VISIBLE,
-    });
+    }));
 
+    // Ajout des fonds de plan
     for (let background in LAYERS_SETTINGS.BACKGROUND) {
       map.addLayer(
         new TileLayer({
@@ -69,10 +71,6 @@ class LayersAndStyle {
         })
       )
     }
-
-    map.addLayer(this.features);
-    map.addLayer(this.selectionLayer);
-    map.addLayer(this.editionLayer);
   }
 
   /**
