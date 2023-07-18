@@ -3,5 +3,5 @@
 </template>
 
 <script setup>
-import RegularWidget from '../../../RegularWidget.vue';
+import RegularWidget from '../model/RegularWidget.vue';
 </script>

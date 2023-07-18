@@ -38,10 +38,10 @@
 
 <script setup>
 import { ref, shallowRef } from 'vue';
-import FeaturesTool from './tools/FeaturesTool.vue';
-import ProcessingTool from './tools/ProcessingTool.vue';
-import InformationTool from './tools/InformationTool.vue';
-import DrawTool from '../DrawTool.vue';
+import FeaturesTool from './FeaturesTool.vue';
+import ProcessingTool from './ProcessingTool.vue';
+import InformationTool from './InformationTool.vue';
+import DrawTool from './DrawTool.vue';
 import { useMapStore } from 'src/stores/map-store';
 import { easeOut } from 'ol/easing';
 import { useWidgetStore } from 'src/stores/widget-store';

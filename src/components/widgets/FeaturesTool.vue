@@ -83,8 +83,8 @@
 
 <script setup >
 import { ref } from 'vue';
-import FeatureSelector from '../../selector/FeatureSelector.vue'
-import RegularWidget from '../../../RegularWidget.vue';
+import FeatureSelector from './FeatureSelector.vue'
+import RegularWidget from '../model/RegularWidget.vue';
 import ApiRequestor from 'src/Services/ApiRequestor';
 import GeoJSON from 'ol/format/GeoJSON'
 import { useMapStore } from "src/stores/map-store";
@@ -145,10 +145,12 @@ async function enableModification(feature) {
     featureProjection: 'EPSG:3857'
   })
   mapStore.editionLayer.getSource().addFeature(workingFeature)
+  mapStore.selectionLayer.setVisible(false)
   step.value = 4
   featureType.value = typology.value[feature[0].properties_.id_typology]
   observation.value = feature[0].properties_.commentaire
   widgetStore.setActiveWidget('drawTool')
+  widgetStore.setDrawMode()
 }
 
 /**
@@ -156,6 +158,7 @@ async function enableModification(feature) {
  */
 function disableModification() {
   step.value = actionType.value === 'select' ? 3 : 2
+  mapStore.editionLayer.getSource().clear()
   widgetStore.setActiveWidget(null)
 }
 

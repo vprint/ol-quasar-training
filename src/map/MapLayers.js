@@ -1,23 +1,18 @@
 import TileLayer from "ol/layer/Tile";
 import XYZ from "ol/source/XYZ";
-import OSM from "ol/source/OSM";
 import MVT from "ol/format/MVT.js";
 import VectorLayer from "ol/layer/Vector.js";
 import VectorSource from "ol/source/Vector.js";
 import VectorTileLayer from "ol/layer/VectorTile.js";
 import VectorTileSource from "ol/source/VectorTile.js";
-import ApiRequestor from "../Services/ApiRequestor";
 import {
-  LAYERS_SETTINGS,
-  STYLE_SETTINGS,
-  FEATURES_SETTINGS,
+  LAYERS_SETTINGS
 } from "../miscellaneous/enum";
-import { Fill, Stroke, Style } from "ol/style";
+import LayerStyle from "./LayerStyle";
 
-class LayersAndStyle {
+class MapLayers {
   constructor({ map }) {
     this.StyleCache = {};
-    this.initializeStyle();
 
     // Cartographie thématique
     this.features = new VectorTileLayer({
@@ -31,7 +26,7 @@ class LayersAndStyle {
       zIndex: LAYERS_SETTINGS.VECTOR_TILES.ZINDEX,
       name: LAYERS_SETTINGS.VECTOR_TILES.NAME,
       preload: Infinity,
-      style: this.cartoFunction.bind(this),
+      //style: this.cartoFunction.bind(this),
     });
     map.addLayer(this.features)
 
@@ -71,50 +66,12 @@ class LayersAndStyle {
         })
       )
     }
-  }
 
-  /**
-   * Fonction de requêtage des styles
-   */
-  async initializeStyle() {
-    // Requête du style
-    let JSONStyle = await ApiRequestor.getStyles();
-
-    // Décomposition des styles reçus
-    if (JSONStyle) {
-      for (let style of JSONStyle) {
-        this.StyleCache[style.id_typology] = new Style({
-          stroke: new Stroke({
-            color: style.stroke_color || "transparent",
-            width: style.stroke_width || 0,
-            lineDash: style.line_dash || null,
-          }),
-          fill: new Fill({
-            color: style.fill_color || "transparent",
-          }),
-        });
-      }
-    }
-  }
-
-  /**
-   * Fonction d'application des styles aux features
-   * @param {Objet} feature - entité à styliser.
-   */
-  cartoFunction(feature) {
-    // Application des styles en fonction d'id_typology
-    if (
-      this.StyleCache[feature.get(FEATURES_SETTINGS.TYPOLOGY.ID_TYPOLOGY_FIELD)]
-    ) {
-      return this.StyleCache[
-        feature.get(FEATURES_SETTINGS.TYPOLOGY.ID_TYPOLOGY_FIELD)
-      ];
-    }
-    // Si le style n'est pas disponible alors le DEFAULT_STYLE est retourné
-    else {
-      return STYLE_SETTINGS.DEFAULT_STYLE;
-    }
+    // Application des styles
+    new LayerStyle({
+      mapLayer: this.features
+    })
   }
 }
 
-export default LayersAndStyle;
+export default MapLayers

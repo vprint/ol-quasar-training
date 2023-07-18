@@ -41,12 +41,12 @@ const columns = [
     field: 'id_',
   }
 ]
-let selectedIds = []
-let typology = {}
-let types = []
-let selectedFeatureId = null
-let featuresSelector = null
-let FeaturesBbox = null
+let selectedIds = [];
+let typology = {};
+let types = [];
+let selectedFeatureId;
+let featuresSelector;
+let FeaturesBbox;
 
 formatTypology()
 enableSelection()

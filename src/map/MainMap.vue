@@ -10,16 +10,14 @@
 
 <script setup>
 import { Map, View } from 'ol';
-import Link from 'ol/interaction/Link'
 import { MAP_SETTINGS } from '../miscellaneous/enum';
 import { fromLonLat } from 'ol/proj';
-import WidgetToolbar from '../components/widgets/toolbar/WidgetToolbar.vue';
-import LayersAndStyle from '../MapElement/LayersAndStyle';
-import LayersTool from '../components/widgets/LayersTool.vue'
+import WidgetToolbar from '../components/widgets/WidgetToolbar.vue';
+import MapLayers from '../Map/MapLayers';
+import LayersTool from '../components/widgets/LayersTool.vue';
 import { useMapStore } from '../stores/map-store';
-import { ScaleLine } from 'ol/control.js';
-import { ref, onMounted } from 'vue'
-import { Attribution } from 'ol/control'
+import { ref, onMounted } from 'vue';
+import MapElement from './MapElement';
 
 const mapStore = useMapStore();
 const map = ref(null)
@@ -34,20 +32,11 @@ onMounted(() => {
       maxZoom: MAP_SETTINGS.MAXZOOM,
       minZoom: MAP_SETTINGS.MINZOOM
     }),
-  })
-  map.value.addInteraction(new Link({
-    params: ['x', 'y', 'z', 'r']
-  }))
-  map.value.addControl(new ScaleLine({
-    units: 'metric',
-    bar: false,
-    text: true,
-    minWidth: 140
-  }));
-  map.value.addControl(new Attribution({
-    collapsible: false,
-  }))
-  new LayersAndStyle({
+  });
+  new MapLayers({
+    map: map.value
+  });
+  new MapElement({
     map: map.value
   })
   mapStore.defineMap(map.value)
@@ -63,3 +52,4 @@ onMounted(() => {
   bottom: 0
   width: 100%
 </style>
+../Map/LayersAndStyle

@@ -44,12 +44,19 @@
 <script setup>
 import { useMapStore } from 'src/stores/map-store';
 import { Modify } from 'ol/interaction'
+import { useWidgetStore } from 'src/stores/widget-store';
 
 const mapStore = useMapStore()
+const widgetStore = useWidgetStore()
 
 mapStore.map.addInteraction(new Modify({
   source: mapStore.editionLayer.getSource()
 }))
+
+widgetStore.$subscribe((mutation) => {
+  let drawMode = widgetStore.drawModeTest
+  console.log(drawMode)
+});
 
 </script>
 
