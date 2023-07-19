@@ -1,41 +1,10 @@
-# Quasar App (ol-quasar)
+# Initiation Vue.js + Quasar + OpenLayers
 
-A Quasar Project
+## frontend
+Utilisation des composants Quasar (un framework Vue) et de la librairie OpenLayers pour la partie cartographie.
 
-## Install the dependencies
-```bash
-yarn
-# or
-npm install
-```
-
-### Start the app in development mode (hot-code reloading, error reporting, etc.)
-```bash
-quasar dev
-```
-
-
-### Lint the files
-```bash
-yarn lint
-# or
-npm run lint
-```
-
-
-### Format the files
-```bash
-yarn format
-# or
-npm run format
-```
-
-
-
-### Build the app for production
-```bash
-quasar build
-```
-
-### Customize the configuration
-See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-vite/quasar-config-js).
+## backend
+- t-rex: distribution des tuiles vectorielles
+- pgfeaturserv: distribution des entités (format json)
+- geoserver: mise à jour des données (wfs-t)
+- postgis: base sql
