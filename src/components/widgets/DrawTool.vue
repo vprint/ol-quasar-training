@@ -1,7 +1,7 @@
 <template>
   <div class="drawer no-shadow" style="font-size: 2em">
     <q-list>
-      <q-item clickable>
+      <q-item clickable @click="tester()">
         <q-item-section avatar>
           <q-icon name="sym_o_pentagon" />
         </q-item-section>
@@ -43,19 +43,26 @@
 
 <script setup>
 import { useMapStore } from 'src/stores/map-store';
-import { Modify } from 'ol/interaction'
 import { useWidgetStore } from 'src/stores/widget-store';
+import { onUnmounted } from 'vue';
+import { Modify } from 'ol/interaction'
+
 
 const mapStore = useMapStore()
 const widgetStore = useWidgetStore()
 
-mapStore.map.addInteraction(new Modify({
+const modifyInteraction = new Modify({
   source: mapStore.editionLayer.getSource()
-}))
+})
+
+mapStore.map.addInteraction(modifyInteraction)
 
 widgetStore.$subscribe((mutation) => {
   let drawMode = widgetStore.drawModeTest
-  console.log(drawMode)
+});
+
+onUnmounted(() => {
+  modifyInteraction.setActive(false)
 });
 
 </script>
