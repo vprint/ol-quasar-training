@@ -1,23 +1,15 @@
-import {
-  LAYERS_SETTINGS,
-  STYLE_SETTINGS,
-  FEATURES_SETTINGS,
-} from "../miscellaneous/enum";
-import {
-  Fill,
-  Stroke,
-  Style
-} from "ol/style";
+import { STYLE_SETTINGS, FEATURES_SETTINGS } from "../miscellaneous/enum";
+import { Fill,Stroke,Style } from "ol/style";
 import ApiRequestor from "src/Services/ApiRequestor";
 
 
 class LayerStyle {
   constructor({ mapLayer }) {
     this.styleCache = {};
-    //this.mapLayer = map.getLayers().getArray().find(layer => layer.get('name') == LAYERS_SETTINGS.VECTOR_TILES.NAME);
     this.mapLayer = mapLayer
     this.initializeStyle();
 
+    // Application du style
     this.mapLayer.setStyle(this.cartoFunction.bind(this))
   }
 
@@ -51,12 +43,8 @@ class LayerStyle {
    */
   cartoFunction(feature) {
     // Application des styles en fonction d'id_typology
-    if (
-      this.styleCache[feature.get(FEATURES_SETTINGS.TYPOLOGY.ID_TYPOLOGY_FIELD)]
-    ) {
-      return this.styleCache[
-        feature.get(FEATURES_SETTINGS.TYPOLOGY.ID_TYPOLOGY_FIELD)
-      ];
+    if (this.styleCache[feature.get(FEATURES_SETTINGS.TYPOLOGY.ID_TYPOLOGY_FIELD)]) {
+      return this.styleCache[feature.get(FEATURES_SETTINGS.TYPOLOGY.ID_TYPOLOGY_FIELD)];
     }
     // Si le style n'est pas disponible alors le DEFAULT_STYLE est retourné
     else {

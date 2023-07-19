@@ -13,7 +13,7 @@ import { Map, View } from 'ol';
 import { MAP_SETTINGS } from '../miscellaneous/enum';
 import { fromLonLat } from 'ol/proj';
 import WidgetToolbar from '../components/widgets/WidgetToolbar.vue';
-import MapLayers from '../Map/MapLayers';
+import MapLayers from '../map/MapLayers';
 import LayersTool from '../components/widgets/LayersTool.vue';
 import { useMapStore } from '../stores/map-store';
 import { ref, onMounted } from 'vue';
@@ -52,4 +52,3 @@ onMounted(() => {
   bottom: 0
   width: 100%
 </style>
-../Map/LayersAndStyle

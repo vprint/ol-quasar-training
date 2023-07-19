@@ -5,14 +5,11 @@ import VectorLayer from "ol/layer/Vector.js";
 import VectorSource from "ol/source/Vector.js";
 import VectorTileLayer from "ol/layer/VectorTile.js";
 import VectorTileSource from "ol/source/VectorTile.js";
-import {
-  LAYERS_SETTINGS
-} from "../miscellaneous/enum";
+import { LAYERS_SETTINGS } from "../miscellaneous/enum";
 import LayerStyle from "./LayerStyle";
 
 class MapLayers {
   constructor({ map }) {
-    this.StyleCache = {};
 
     // Cartographie thématique
     this.features = new VectorTileLayer({
@@ -25,8 +22,7 @@ class MapLayers {
       }),
       zIndex: LAYERS_SETTINGS.VECTOR_TILES.ZINDEX,
       name: LAYERS_SETTINGS.VECTOR_TILES.NAME,
-      preload: Infinity,
-      //style: this.cartoFunction.bind(this),
+      preload: Infinity
     });
     map.addLayer(this.features)
 
