@@ -61,7 +61,7 @@ const menuItems = shallowRef({
  * Ecouteur de changement du gestionnaire de widget
  */
 widgetStore.$subscribe((mutation) => {
-  drawerState.value = widgetStore.widget === 'drawTool' ? true : false;
+  drawerState.value = widgetStore.drawMode === 'modify' ? true : false;
 });
 
 /**

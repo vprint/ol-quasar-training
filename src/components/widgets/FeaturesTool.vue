@@ -89,7 +89,6 @@ import ApiRequestor from 'src/Services/ApiRequestor';
 import GeoJSON from 'ol/format/GeoJSON'
 import { useMapStore } from "src/stores/map-store";
 import { useWidgetStore } from 'src/stores/widget-store';
-import { Modify } from 'ol/interaction';
 
 const mapStore = useMapStore();
 const widgetStore = useWidgetStore();
@@ -102,7 +101,6 @@ const featureType = ref(null)
 const deleting = ref(false)
 const saving = ref(false)
 const waiter = ref(false)
-
 let workingFeature = null
 
 
@@ -150,7 +148,7 @@ async function enableModification(feature) {
   featureType.value = typology.value[feature[0].properties_.id_typology]
   observation.value = feature[0].properties_.commentaire
   widgetStore.setActiveWidget('drawTool')
-  widgetStore.setDrawMode()
+  widgetStore.setDrawMode('modify')
 }
 
 /**
@@ -160,6 +158,7 @@ function disableModification() {
   step.value = actionType.value === 'select' ? 3 : 2
   mapStore.editionLayer.getSource().clear()
   widgetStore.setActiveWidget(null)
+  reset()
 }
 
 /**
@@ -202,6 +201,13 @@ function wfsFormatter(feature) {
  */
 function updateWaiter(bool) {
   waiter.value = bool
+}
+
+/**
+ * Reinitialisation des valeurs
+ */
+function reset() {
+  workingFeature = null
 }
 
 </script>

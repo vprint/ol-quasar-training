@@ -46,10 +46,14 @@ import { useMapStore } from 'src/stores/map-store';
 import { useWidgetStore } from 'src/stores/widget-store';
 import { onUnmounted } from 'vue';
 import { Modify } from 'ol/interaction'
+import { ref } from 'vue'
 
 
 const mapStore = useMapStore()
 const widgetStore = useWidgetStore()
+const drawMode = ref(null)
+
+drawMode.value = widgetStore.drawMode
 
 const modifyInteraction = new Modify({
   source: mapStore.editionLayer.getSource()
@@ -57,9 +61,10 @@ const modifyInteraction = new Modify({
 
 mapStore.map.addInteraction(modifyInteraction)
 
-widgetStore.$subscribe((mutation) => {
-  let drawMode = widgetStore.drawModeTest
-});
+// widgetStore.$subscribe((mutation) => {
+//   let drawMode = widgetStore.drawModeTest
+//   console.log(widgetStore.menuItem)
+// });
 
 onUnmounted(() => {
   modifyInteraction.setActive(false)

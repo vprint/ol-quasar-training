@@ -1,35 +1,31 @@
 import { defineStore } from 'pinia';
+import FeaturesTool from '../components/widgets/FeaturesTool.vue';
+import ProcessingTool from '../components/widgets/ProcessingTool.vue';
+import InformationTool from '../components/widgets/InformationTool.vue';
 
 export const useWidgetStore = defineStore('widget', {
   state: () => ({
     _widget: null,
-    _drawMode: {
-      addLine: false,
-      addPolygon: false,
-      modify: false
+    _menuItems: {
+      FeaturesTool: { active: true, tool: FeaturesTool, width: '450px', title: 'FeaturesTool', icon: 'mdi-map', tooltip: 'Features', drawMode: 'modify' },
+      ProcessingTool: { active: false, tool: ProcessingTool, width: '400px', title: 'ProcessingTool', icon: 'handyman', tooltip: 'Processings' },
+      InformationTool: { active: false, tool: InformationTool, width: '400px', title: 'InformationTool', icon: 'info', tooltip: 'Information' }
     }
   }),
   getters: {
     widget: (state) => state._widget,
-    drawMode: (state) => {
-      for (let e in state._drawMode) {
-        if (state._drawMode[e]) {
-          return state._drawMode[e]
-        }
-      }
+    menuItem: (state) => {
+      let getActiveWidget = Object.keys(state._menuItems).find(k => state._menuItems[k].active)
+      return state._menuItems[getActiveWidget]
     },
-    drawModeTest: (state) => state._drawMode,
+    drawMode: (state) => state._menuItems.FeaturesTool.drawMode
   },
   actions: {
     setActiveWidget(name) {
       this._widget = name
     },
-    setDrawMode() {
-      this._drawMode = {
-        addLine: false,
-        addPolygon: false,
-        modify: true
-      }
-    },
-  },
+    setDrawMode(mode) {
+      this._menuItems.FeaturesTool.drawMode = mode
+    }
+  }
 });
